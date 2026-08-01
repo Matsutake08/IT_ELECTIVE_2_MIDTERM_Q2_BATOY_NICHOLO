@@ -1,3 +1,22 @@
-﻿// See https://aka.ms/new-console-template for more information
+var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine("Hello, World!");
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseSession();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
+
+app.Run();
